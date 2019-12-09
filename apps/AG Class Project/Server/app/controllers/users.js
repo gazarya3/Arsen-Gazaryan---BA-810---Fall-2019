@@ -6,11 +6,16 @@ var express = require('express'),
   mongoose = require('mongoose'),
   User = mongoose.model('User');
 
+passportService = require('../../config/passport'),
+  passport = require('passport');
+
+const requireLogin = passport.authenticate('local', { session: false });
+
 
 module.exports = function (app, config) {
   app.use('/api', router);
 
-  router.route('/users').post((req, res, next) => {
+  router.route('/users').post(requireLogin,(req, res, next) => {
     logger.log('info', 'Create user');
     // res.status(201).json({ message: 'Created user' });
     var user = new User(req.body);
@@ -23,7 +28,7 @@ module.exports = function (app, config) {
       });
   });
 
-  router.route('/users').get((req, res, next) => {
+  router.route('/users').get(requireLogin,(req, res, next) => {
     logger.log('info', 'Get all users');
     // res.status(200).json({ message: 'Got all users' });
     var query = User.find()
@@ -41,7 +46,7 @@ module.exports = function (app, config) {
       });
   });
 
-  router.route('/users/:id').get((req, res, next) => {
+  router.route('/users/:id').get(requireLogin,(req, res, next) => {
     logger.log('info', 'Get user %s', req.params.id);
     // res.status(200).json({ id: req.params.id });
     User.findById(req.params.id)
@@ -57,17 +62,18 @@ module.exports = function (app, config) {
       });
   });
 
+  router.route('/users/login').post(requireLogin, login);
 
-  router.route('/users/login').post((req, res, next) => {
-    logger.log('info', '%s logging in', req.body.email);
-    var email = req.body.email
-    var password = req.body.password;
+  // router.route('/users/login').post((req, res, next) => {
+  //   logger.log('info', '%s logging in', req.body.email);
+  //   var email = req.body.email
+  //   var password = req.body.password;
 
-    var obj = { 'email': email, 'password': password };
-    res.status(201).json(obj);
-  });
+  //   var obj = { 'email': email, 'password': password };
+  //   res.status(201).json(obj);
+  // });
 
-  router.route('/users/:id').put((req, res, next) => {
+  router.route('/users/:id').put(requireLogin,(req, res, next) => {
     logger.log('info', 'Get user %s', req.params.id);
     User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, multi: false })
       .then(user => {
@@ -79,7 +85,7 @@ module.exports = function (app, config) {
   });
 
 
-  router.route('/users/:id').delete((req, res, next) => {
+  router.route('/users/:id').delete(requireLogin,(req, res, next) => {
     logger.log('info', 'Delete user ' + req.params.id);
     User.remove({ _id: req.params.id })
       .then(user => {
