@@ -1,0 +1,26 @@
+<template>
+    <form>
+        <div class="form-group">
+            <label for="widgetInput">Widget</label>
+            <input value.bind="widget.selectedWidget.Windget" type="text" class="form-control" placeholder="Widget title">
+        </div>
+
+                <div class="form-group">
+            <label for="widgetDetail">Number</label>
+            <textarea value.bind="widget.selectedWidget.Widget" class="form-control" placeholder="Widget Number"
+                id="widgetDetail" rows="1"></textarea>
+            <!-- <div class="form-group">
+                <label for="widgetStatus">Status</label>
+                <select value.bind="widget.selectedWidget.status" class="form-control" id="widgetStatus">
+                    <option repeat.for="status of statuses" model.bind="status">${status}</option>
+                </select>
+            </div>
+        </div> -->
+            <!-- <div class="form-group">
+                <label for="widgetStatus">Due Date</label>
+                <flat-picker controlid="startdate" value.bind="widget.selectedWidget.dateDue"></flat-picker> -->
+        </div>
+        <button class="btn btn-primary" click.trigger="saveWidget()">Save</button>
+        <button class="btn btn-primary" click.trigger="Cancel()">Cancel</button>
+    </form>
+</template>
