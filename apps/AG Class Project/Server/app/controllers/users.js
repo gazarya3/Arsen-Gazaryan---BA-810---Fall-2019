@@ -9,8 +9,8 @@ var express = require('express'),
 passportService = require('../../config/passport'),
   passport = require('passport');
 
-const requireLogin = passport.authenticate('local', { session: false });
-
+  const requireLogin = passport.authenticate('local', { session: false });
+  
 
 module.exports = function (app, config) {
   app.use('/api', router);

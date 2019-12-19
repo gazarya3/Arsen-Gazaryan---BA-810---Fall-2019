@@ -8,8 +8,13 @@
   },
   "license": "MIT",
   "dependencies": {
+    "aurelia-animator-css": "^1.0.4",
+    "aurelia-auth": "^3.0.5",
     "aurelia-bootstrapper": "^2.3.2",
-    "aurelia-animator-css": "^1.0.4"
+    "aurelia-fetch-client": "^1.8.2",
+    "cors": "^2.8.5",
+    "flatpickr": "^4.6.3",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "aurelia-cli": "^1.0.2",

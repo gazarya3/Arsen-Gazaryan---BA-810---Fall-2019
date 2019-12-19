@@ -71,3 +71,4 @@ var jwtLogin = new jwtStrategy(jwtOptions, function (payload, next) {
 
 passport.use(jwtLogin);
 
+passport.use(localLogin);

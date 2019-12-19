@@ -1,6 +1,7 @@
 
 const mongoose = require("mongoose"),
     User = require('../app/models/users');
+    Todo = require('../app/models/todos');
 
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';

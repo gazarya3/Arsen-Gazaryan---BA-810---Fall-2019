@@ -1,0 +1,11 @@
+<!-- <template>
+    <h1>${message}</h1>
+    <button click.trigger="login()">Login</button>
+</template> -->
+
+
+<template>
+    <h1>Welcome ${message}</h1>
+    <!-- <button class="btn btn-primary" click.trigger="login()">Login</button> -->
+    <compose show.bind="showUserEditForm" view="./components/editUser.html"></compose>
+</template>

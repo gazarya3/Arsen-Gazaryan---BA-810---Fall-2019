@@ -2,16 +2,19 @@
 var express = require('express'),
 	router = express.Router(),
 	logger = require('../../config/logger');
+	mongoose = require('mongoose'),
+	Todo = mongoose.model('todos');
 
 passport = require('passport');
 
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 module.exports = function (app, config) {
-	app.use('/api', router);
 
-	router.route('/todos').get(requireAuth,(req, res, next) => {
+	app.use('/api', router);
+	router.route('/todos').get((req, res, next) => {
 		logger.log('info', 'Get all todos');
+
 		var query = Todo.find()
 			.sort(req.query.order)
 			.exec()
@@ -19,39 +22,45 @@ module.exports = function (app, config) {
 				if (result && result.length) {
 					res.status(200).json(result);
 				} else {
-					res.status(404).json({ message: "No todos" });
+					res.status(404).json({ message: "No todos" });
 				}
 			})
+
 			.catch(err => {
 				return next(err);
 			});
 	});
 
-	router.route('/todos/users/:id').get(requireAuth,(req, res, next) => {
-		logger.log('info', 'Get all a users todos', req.params.id);
-		var query = Todo.find({ userId: req.params.id })
+
+
+	router.route('/todos/user/:id').get((req, res, next) => {
+		logger.log('info', 'Get all user todos' + req.params.id);
+		var query = Todo.find()
 			.sort(req.query.order)
 			.exec()
 			.then(result => {
 				if (result && result.length) {
 					res.status(200).json(result);
 				} else {
-					res.status(404).json({ message: "No todos" });
+					res.status(404).json({ message: "No todos" });
 				}
 			})
+
 			.catch(err => {
 				return next(err);
 			});
 	});
 
-	router.route('/todos/:id').get(requireAuth,(req, res, next) => {
-		logger.log('info', 'Get user todos', req.params.id);
+
+
+	router.route('/todos/:id').get((req, res, next) => {
+		logger.log('info', 'Get todo %s' + req.params.id);
 		Todo.findById(req.params.id)
-			.then(todo => {
-				if (todo) {
-					res.status(200).json(todo);
+			.then(todos => {
+				if (todos) {
+					res.status(200).json(todos);
 				} else {
-					res.status(404).json({ message: "No todo found" });
+					res.status(404).json({ message: "No Todos found" });
 				}
 			})
 			.catch(error => {
@@ -59,39 +68,41 @@ module.exports = function (app, config) {
 			});
 	});
 
-
-	router.route('todos').post(requireAuth,(req, res, next) => {
-		logger.log('info', '%s logging in', req.body.email);
-		var email = req.body.email
-		var password = req.body.password;
-
-		var obj = { 'email': email, 'password': password };
-		res.status(201).json(obj);
-	});
-
-	router.route('/todos/:id').put(requireAuth,(req, res, next) => {
-		logger.log('info', 'Get user todos', req.params.id);
+	router.route('/todos/:id').put((req, res, next) => {
+		logger.log('info', 'Get todo %s' + req.params.id);
 		Todo.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, multi: false })
-			.then(todo => {
-				res.status(200).json(todo);
+			.then(Todo => {
+				res.status(200).json(Todo);
 			})
 			.catch(error => {
 				return next(error);
 			});
 	});
 
+	router.route('/todos').post((req, res, next) => {
+		logger.log('info', 'Create Todo');
+		var todo = new Todo(req.body);
+		todo.save()
+			.then(result => {
+				res.status(201).json(result);
+			})
+			.catch((err) => {
+				return next(err);
+			});
+	});
 
-	router.route('/todos/:id').delete(requireAuth,(req, res, next) => {
-		logger.log('info', 'Delete user todo' + req.params.id);
+
+	router.route('/todos/:id').delete((req, res, next) => {
+		logger.log('info', 'Get todo %s' + req.params.id);
 		Todo.remove({ _id: req.params.id })
-			.then(todo => {
-				res.status(200).json({ msg: "Todo Deleted" });
+			.then(Todo => {
+				res.status(200).json({ msg: "Todo Deleted" });
 			})
 			.catch(error => {
 				return next(error);
 			});
-	})
+	});
 
-}
+};
 
 //not sure what happens here

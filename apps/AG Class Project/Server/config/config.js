@@ -5,9 +5,9 @@ var path = require('path'),
 var config = {
     development: {
         root: rootPath,
-        app: { name: 'Chirps' },
+        app: { name: 'UCCSS' },
         port: 5000,
-        db: 'mongodb://127.0.0.1/chirps-dev',
+        db: 'mongodb://127.0.0.1/todo-dev',
         secret: "cayennedlikedhistreats"
     },
 
